@@ -58,6 +58,11 @@ const ResetPassword: React.FC = () => {
           password_confirmation,
           token,
         });
+        addToast({
+          type: 'success',
+          title: 'Troca de senha efetuado',
+          description: 'Efetuado troca da senha conforme solicitado',
+        });
 
         history.push('/');
       } catch (err) {

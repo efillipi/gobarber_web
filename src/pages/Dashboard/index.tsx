@@ -6,6 +6,7 @@ import { FiClock, FiPower } from 'react-icons/fi';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
+import { boolean } from 'yup';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 
@@ -93,7 +94,7 @@ const Dashboard: React.FC = () => {
       });
   }, [selectedDate]);
 
-  const disabledDays = useMemo(() => {
+  const daysFull = useMemo(() => {
     const dates = monthAvailability
       .filter(monthDay => monthDay.available === false)
       .map(monthDay => {
@@ -136,6 +137,18 @@ const Dashboard: React.FC = () => {
     );
   }, [appointments]);
 
+  const todayIsFull = useMemo(() => {
+    const day = selectedDate.getDate();
+    const dates = monthAvailability
+      .filter(monthDay => monthDay.available === false)
+      .filter(monthDay => monthDay.day === day);
+
+    if (dates.length > 0) {
+      return true;
+    }
+    return false;
+  }, [monthAvailability, selectedDate]);
+
   return (
     <Container>
       <Header>
@@ -165,6 +178,10 @@ const Dashboard: React.FC = () => {
             {isToday(selectedDate) && <span>Hoje</span>}
             <span>{selectedDateAsText}</span>
             <span>{selectedWeekDay}</span>
+            {!todayIsFull && (
+              <span>{appointments.length} Agendamentos para o dia</span>
+            )}
+            {todayIsFull && <span>Este dia está cheio</span>}
           </p>
 
           {isToday(selectedDate) && nextAppointment && (
@@ -242,9 +259,10 @@ const Dashboard: React.FC = () => {
           <DayPicker
             weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
             fromMonth={new Date()}
-            disabledDays={[{ daysOfWeek: [0, 6] }, ...disabledDays]}
+            disabledDays={[{ daysOfWeek: [0, 6] }]}
             modifiers={{
               available: { daysOfWeek: [1, 2, 3, 4, 5] },
+              highlighted: daysFull,
             }}
             onMonthChange={handleMonthChange}
             selectedDays={selectedDate}
