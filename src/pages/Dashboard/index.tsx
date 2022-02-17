@@ -5,8 +5,6 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { FiClock, FiPower } from 'react-icons/fi';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-
-import { boolean } from 'yup';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 
