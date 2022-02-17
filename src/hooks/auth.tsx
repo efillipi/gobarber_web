@@ -50,6 +50,10 @@ const AuthProvider: React.FC = ({ children }) => {
 
     const { token, user } = response.data;
 
+    if (user.role !== 'Provider') {
+      throw new Error('Unauthorized');
+    }
+
     localStorage.setItem('@GoBarber:token', token);
     localStorage.setItem('@GoBarber:user', JSON.stringify(user));
 
